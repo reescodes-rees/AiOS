@@ -16,7 +16,8 @@ public class MainActivity extends AppCompatActivity {
     private EditText editText;
     private Button sendButton;
     private MessageAdapter messageAdapter;
-    private List<String> messageList;
+    private List<Message> messageList;
+    private AiService aiService;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -29,6 +30,7 @@ public class MainActivity extends AppCompatActivity {
 
         messageList = new ArrayList<>();
         messageAdapter = new MessageAdapter(messageList);
+        aiService = new AiService();
 
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
         recyclerView.setAdapter(messageAdapter);
@@ -36,10 +38,19 @@ public class MainActivity extends AppCompatActivity {
         sendButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                String message = editText.getText().toString().trim();
-                if (!message.isEmpty()) {
-                    messageList.add(message);
+                String userInput = editText.getText().toString().trim();
+                if (!userInput.isEmpty()) {
+                    // Add user message
+                    Message userMessage = new Message(userInput, Message.Sender.USER);
+                    messageList.add(userMessage);
                     messageAdapter.notifyItemInserted(messageList.size() - 1);
+
+                    // Get AI response
+                    Message aiMessage = aiService.getResponse(userInput);
+                    messageList.add(aiMessage);
+                    messageAdapter.notifyItemInserted(messageList.size() - 1);
+
+                    // Scroll to the bottom
                     recyclerView.scrollToPosition(messageList.size() - 1);
                     editText.setText("");
                 }

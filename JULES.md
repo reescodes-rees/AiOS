@@ -4,7 +4,6 @@ This file is used by me, Jules, to track the development progress of the AiOS pr
 
 ## To Do
 
-- [ ] **Develop the Core AI:** Build and train the foundational AI model that will be at the heart of AiOS.
 - [ ] **Implement Self-Monitoring:** Give the AI the ability to see and understand its own processes and the device's status.
 - [ ] **Develop the App Generation Engine:** Build the core functionality that allows the AI to write, compile, and install new applications based on user prompts.
 - [ ] **Initial App Capabilities:** Focus on implementing the first set of app generation capabilities, such as a simple WiFi texting app and a basic web browser.
@@ -12,12 +11,16 @@ This file is used by me, Jules, to track the development progress of the AiOS pr
 
 ## In Progress
 
-- [ ] **UI/UX:** Design an intuitive user interface for interacting with the AI.
-  - [ ] Design the main chat interface.
-  - [ ] Implement basic UI logic.
+- [ ] **Develop the Core AI:** Build and train the foundational AI model that will be at the heart of AiOS.
+  - [ ] Create `Message.java` Model.
+  - [ ] Create Placeholder `AiService.java`.
+  - [ ] Integrate AI Service with MainActivity.
 
 ## Done
 
+- [x] **UI/UX:** Design an intuitive user interface for interacting with the AI.
+  - [x] Design the main chat interface.
+  - [x] Implement basic UI logic.
 - [x] **Android Integration:** Create the Android application that will host the AI and serve as the operating system layer.
   - [x] Set up Android Project Structure (the "housing").
   - [x] Create a basic Main Activity.
