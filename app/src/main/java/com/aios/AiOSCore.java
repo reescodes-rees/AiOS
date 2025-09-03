@@ -1,5 +1,6 @@
 package com.aios;
 
+import com.aios.templates.TemplateManager;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -11,10 +12,13 @@ import java.util.List;
 public class AiOSCore {
 
     private final List<String> eventLog;
+    private final TemplateManager templateManager;
 
     public AiOSCore() {
         this.eventLog = new ArrayList<>();
+        this.templateManager = new TemplateManager();
         logEvent("AiOS Core Initialized.");
+        logEvent("Template scan complete. Found " + this.templateManager.getAvailableTemplates().size() + " templates.");
     }
 
     /**
@@ -32,5 +36,13 @@ public class AiOSCore {
      */
     public List<String> getEventLog() {
         return Collections.unmodifiableList(eventLog);
+    }
+
+    /**
+     * Retrieves the template manager.
+     * @return The TemplateManager instance.
+     */
+    public TemplateManager getTemplateManager() {
+        return templateManager;
     }
 }

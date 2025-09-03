@@ -1,0 +1,12 @@
+apply plugin: 'com.android.application'
+
+android {
+    compileSdkVersion 33
+    defaultConfig {
+        applicationId "com.aios.generated.__PACKAGE_NAME__"
+        minSdkVersion 24
+        targetSdkVersion 33
+        versionCode 1
+        versionName "1.0"
+    }
+}
