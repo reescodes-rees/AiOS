@@ -1,52 +1,12 @@
 package com.aios.commands;
 
 import com.aios.AiOSCore;
+import com.aios.templates.TemplateManager;
 import com.aios.utils.FileGenerator;
+import java.io.IOException;
 import java.util.List;
 
 public class CreateAppCommand implements Command {
-
-    private static final String GRADLE_TEMPLATE = "apply plugin: 'com.android.application'\\n\\n" +
-            "android {\\n" +
-            "    compileSdkVersion 33\\n" +
-            "    defaultConfig {\\n" +
-            "        applicationId \"com.aios.generated.__PACKAGE_NAME__\"\\n" +
-            "        minSdkVersion 24\\n" +
-            "        targetSdkVersion 33\\n" +
-            "        versionCode 1\\n" +
-            "        versionName \"1.0\"\\n" +
-            "    }\\n" +
-            "}\\n";
-
-    private static final String MANIFEST_TEMPLATE = "<?xml version=\\\"1.0\\\" encoding=\\\"utf-8\\\"?>\\n" +
-            "<manifest xmlns:android=\\\"http://schemas.android.com/apk/res/android\\\"\\n" +
-            "    package=\\\"com.aios.generated.__PACKAGE_NAME__\\\">\\n\\n" +
-            "    <application\\n" +
-            "        android:allowBackup=\\\"true\\\"\\n" +
-            "        android:label=\\\"__APP_NAME__\\\"\\n" +
-            "        android:theme=\\\"@android:style/Theme.Material.Light\\\">\\n" +
-            "        <activity android:name=\\\".MainActivity\\\" android:exported=\\\"true\\\">\\n" +
-            "            <intent-filter>\\n" +
-            "                <action android:name=\\\"android.intent.action.MAIN\\\" />\\n" +
-            "                <category android:name=\\\"android.intent.category.LAUNCHER\\\" />\\n" +
-            "            </intent-filter>\\n" +
-            "        </activity>\\n" +
-            "    </application>\\n\\n" +
-            "</manifest>";
-
-    private static final String ACTIVITY_TEMPLATE = "package com.aios.generated.__PACKAGE_NAME__;\\n\\n" +
-            "import android.app.Activity;\\n" +
-            "import android.os.Bundle;\\n" +
-            "import android.widget.TextView;\\n\\n" +
-            "public class MainActivity extends Activity {\\n" +
-            "    @Override\\n" +
-            "    protected void onCreate(Bundle savedInstanceState) {\\n" +
-            "        super.onCreate(savedInstanceState);\\n" +
-            "        TextView textView = new TextView(this);\\n" +
-            "        textView.setText(\\\"Hello from __APP_NAME__!\\\");\\n" +
-            "        setContentView(textView);\\n" +
-            "    }\\n" +
-            "}";
 
     @Override
     public String getName() {
@@ -55,18 +15,26 @@ public class CreateAppCommand implements Command {
 
     @Override
     public String getDescription() {
-        return "Creates a new 'Hello World' app. Usage: createapp <AppName>";
+        return "Creates a new app from a template. Usage: createapp <AppName> <TemplateName>";
     }
 
     @Override
     public String execute(List<String> args, AiOSCore core, CommandRegistry registry) {
         core.logEvent("Executing 'createapp' command with args: " + args);
 
-        if (args.isEmpty()) {
-            return "Error: App name is required. Usage: createapp <AppName>";
+        if (args.size() < 2) {
+            return "Error: App name and template name are required. Usage: createapp <AppName> <TemplateName>";
         }
 
         String appName = args.get(0);
+        String templateName = args.get(1);
+        TemplateManager templateManager = core.getTemplateManager();
+
+        // Check if template exists
+        if (!templateManager.getAvailableTemplates().contains(templateName)) {
+            return "Error: Template '" + templateName + "' not found. Use 'listtemplates' to see available templates.";
+        }
+
         // Basic sanitization for package name
         String packageName = appName.toLowerCase().replaceAll("[^a-z0-9_]", "");
         if (packageName.isEmpty()) {
@@ -74,39 +42,39 @@ public class CreateAppCommand implements Command {
         }
 
         String baseDir = "generated_apps/" + appName;
-        core.logEvent("Starting app generation for '" + appName + "' in " + baseDir);
+        core.logEvent("Starting app generation for '" + appName + "' from template '" + templateName + "' in " + baseDir);
 
-        // 1. Create Gradle file
-        String gradleContent = GRADLE_TEMPLATE.replace("__PACKAGE_NAME__", packageName);
-        boolean gradleSuccess = FileGenerator.writeToFile(baseDir + "/build.gradle", gradleContent);
-        if (gradleSuccess) {
+        try {
+            // 1. Create Gradle file
+            String gradleTemplate = templateManager.getTemplateContent(templateName, "build.gradle.template");
+            String gradleContent = gradleTemplate.replace("__PACKAGE_NAME__", packageName);
+            if (!FileGenerator.writeToFile(baseDir + "/build.gradle", gradleContent)) {
+                throw new IOException("Failed to write build.gradle");
+            }
             core.logEvent("Successfully generated build.gradle");
-        } else {
-            core.logEvent("Failed to generate build.gradle");
-            return "Error: Could not write build.gradle file.";
-        }
 
-        // 2. Create Manifest file
-        String manifestContent = MANIFEST_TEMPLATE.replace("__APP_NAME__", appName)
-                .replace("__PACKAGE_NAME__", packageName);
-        boolean manifestSuccess = FileGenerator.writeToFile(baseDir + "/src/main/AndroidManifest.xml", manifestContent);
-        if (manifestSuccess) {
+            // 2. Create Manifest file
+            String manifestTemplate = templateManager.getTemplateContent(templateName, "AndroidManifest.xml.template");
+            String manifestContent = manifestTemplate.replace("__APP_NAME__", appName)
+                    .replace("__PACKAGE_NAME__", packageName);
+            if (!FileGenerator.writeToFile(baseDir + "/src/main/AndroidManifest.xml", manifestContent)) {
+                throw new IOException("Failed to write AndroidManifest.xml");
+            }
             core.logEvent("Successfully generated AndroidManifest.xml");
-        } else {
-            core.logEvent("Failed to generate AndroidManifest.xml");
-            return "Error: Could not write AndroidManifest.xml file.";
-        }
 
-        // 3. Create MainActivity file
-        String activityContent = ACTIVITY_TEMPLATE.replace("__APP_NAME__", appName)
-                .replace("__PACKAGE_NAME__", packageName);
-        String activityPath = baseDir + "/src/main/java/com/aios/generated/" + packageName + "/MainActivity.java";
-        boolean activitySuccess = FileGenerator.writeToFile(activityPath, activityContent);
-        if (activitySuccess) {
+            // 3. Create MainActivity file
+            String activityTemplate = templateManager.getTemplateContent(templateName, "MainActivity.java.template");
+            String activityContent = activityTemplate.replace("__APP_NAME__", appName)
+                    .replace("__PACKAGE_NAME__", packageName);
+            String activityPath = baseDir + "/src/main/java/com/aios/generated/" + packageName + "/MainActivity.java";
+            if (!FileGenerator.writeToFile(activityPath, activityContent)) {
+                throw new IOException("Failed to write MainActivity.java");
+            }
             core.logEvent("Successfully generated MainActivity.java");
-        } else {
-            core.logEvent("Failed to generate MainActivity.java");
-            return "Error: Could not write MainActivity.java file.";
+
+        } catch (IOException e) {
+            core.logEvent("App generation failed: " + e.getMessage());
+            return "Error: App generation failed. Could not write a template file. " + e.getMessage();
         }
 
         // Refresh the app registry to include the new app
@@ -114,6 +82,6 @@ public class CreateAppCommand implements Command {
         core.getAppRegistry().scanForApps();
         core.logEvent("App registry refreshed.");
 
-        return "Successfully created app '" + appName + "' in directory '" + baseDir + "'.";
+        return "Successfully created app '" + appName + "' from template '" + templateName + "'.";
     }
 }

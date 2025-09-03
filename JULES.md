@@ -9,18 +9,23 @@ This file is used by me, Jules, to track the development progress of the AiOS pr
 
 ## In Progress
 
-- [ ] **Implement App Awareness and Management:** Give the AI the ability to see and manage the apps it has created.
-    - [ ] Create `AppInfo.java` model and `AppRegistry.java` service.
-    - [ ] Integrate `AppRegistry` into `AiOSCore`.
-    - [ ] Create `listapps` command.
-    - [ ] Upgrade `createapp` command to update the registry.
-
-## Done
-
-- [x] **Develop the App Generation Engine:** Build the core functionality that allows the AI to write, compile, and install new applications based on user prompts.
+- [ ] **Develop the App Generation Engine:** Build the core functionality that allows the AI to write, compile, and install new applications based on user prompts.
     - [x] Create `FileGenerator.java` utility.
     - [x] Define app templates.
     - [x] Upgrade `createapp` command to generate files.
+    - [ ] **Implement App Template System**
+        - [ ] Create template files and directory structure.
+        - [ ] Create `TemplateManager` service.
+        - [ ] Create `listtemplates` command.
+        - [ ] Upgrade `createapp` command to use templates.
+
+## Done
+
+- [x] **Implement App Awareness and Management:** Give the AI the ability to see and manage the apps it has created.
+    - [x] Create `AppInfo.java` model and `AppRegistry.java` service.
+    - [x] Integrate `AppRegistry` into `AiOSCore`.
+    - [x] Create `listapps` command.
+    - [x] Upgrade `createapp` command to update the registry.
 - [x] **Create Project Documentation:** Write technical documentation for the project's architecture and API.
 - [x] **Implement Self-Monitoring (System Status Self-Stream):** Give the AI the ability to see and understand its own processes and the device's status.
 - [x] **Develop the Core AI:** Build and train the foundational AI model that will be at the heart of AiOS.
