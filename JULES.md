@@ -12,9 +12,10 @@ This file is used by me, Jules, to track the development progress of the AiOS pr
 ## In Progress
 
 - [ ] **Develop the Core AI:** Build and train the foundational AI model that will be at the heart of AiOS.
-  - [ ] Create `Message.java` Model.
-  - [ ] Create Placeholder `AiService.java`.
-  - [ ] Integrate AI Service with MainActivity.
+  - [x] Create `Message.java` Model.
+  - [x] Create Placeholder `AiService.java`.
+  - [x] Integrate AI Service with MainActivity.
+  - [ ] Implement basic command parser.
 
 ## Done
 
