@@ -4,23 +4,27 @@ This file is used by me, Jules, to track the development progress of the AiOS pr
 
 ## To Do
 
-- [ ] **Initial App Capabilities:** Focus on implementing the first set of app generation capabilities, such as a simple WiFi texting app and a basic web browser.
 - [ ] **Testing and Security:** Rigorously test the system for stability, performance, and security vulnerabilities.
 
 ## In Progress
 
-- [ ] **Develop the App Generation Engine:** Build the core functionality that allows the AI to write, compile, and install new applications based on user prompts.
-    - [x] Create `FileGenerator.java` utility.
-    - [x] Define app templates.
-    - [x] Upgrade `createapp` command to generate files.
-    - [ ] **Implement App Template System**
-        - [ ] Create template files and directory structure.
-        - [ ] Create `TemplateManager` service.
-        - [ ] Create `listtemplates` command.
-        - [ ] Upgrade `createapp` command to use templates.
+- [ ] **Initial App Capabilities:** Focus on implementing the first set of app generation capabilities, such as a simple WiFi texting app and a basic web browser.
+    - [ ] **Implement Initial Networking**
+        - [ ] Add Internet permission to Manifest.
+        - [ ] Create `NetworkManager` service.
+        - [ ] Create `fetch` command.
 
 ## Done
 
+- [x] **Develop the App Generation Engine:** Build the core functionality that allows the AI to write, compile, and install new applications based on user prompts.
+    - [x] Create `FileGenerator.java` utility.
+    - [x] Define app templates.
+    - [x] Upgrade `createapp` command to generate files.
+    - [x] **Implement App Template System**
+        - [x] Create template files and directory structure.
+        - [x] Create `TemplateManager` service.
+        - [x] Create `listtemplates` command.
+        - [x] Upgrade `createapp` command to use templates.
 - [x] **Implement App Awareness and Management:** Give the AI the ability to see and manage the apps it has created.
     - [x] Create `AppInfo.java` model and `AppRegistry.java` service.
     - [x] Integrate `AppRegistry` into `AiOSCore`.

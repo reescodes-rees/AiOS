@@ -18,19 +18,29 @@ AiOS is a revolutionary new operating system for Android devices. It features a 
     *   Productivity tools.
 *   **Legal and Secure:** All generated applications are designed to be legally compliant and secure, with the AI ensuring that best practices are followed.
 
-## 3. Project Goals & Roadmap
+## 3. Current Status (v0.6)
+
+The project is under active development. As of the current version, the AI has the following capabilities:
+
+*   **Modular Command System:** The AI's abilities are built on a flexible command-registry pattern, making it easy to add new skills.
+*   **Self-Awareness:** The AI has a core "memory" (`AiOSCore`) and an `AppRegistry`, allowing it to be aware of the applications it has created. It can list these apps with the `listapps` command.
+*   **Proactive Monitoring:** A `SystemMonitor` service runs in the background, providing a continuous "self-stream" of status updates to the UI.
+*   **App Generation Engine:** The AI can generate complete, functional Android applications from a library of templates. It currently knows how to build a "HelloWorldApp" and a "SimpleBrowserApp".
+
+## 4. Project Roadmap
 
 This project aims to create a fully functional proof-of-concept of the AiOS. The high-level plan is as follows:
 
-1.  **Develop the Core AI:** Build and train the foundational AI model that will be at the heart of AiOS.
-2.  **Android Integration:** Create the Android application that will host the AI and serve as the operating system layer.
-3.  **Implement Self-Monitoring:** Give the AI the ability to see and understand its own processes and the device's status.
-4.  **Develop the App Generation Engine:** Build the core functionality that allows the AI to write, compile, and install new applications based on user prompts.
-5.  **Initial App Capabilities:** Focus on implementing the first set of app generation capabilities, such as a simple WiFi texting app and a basic web browser.
-6.  **UI/UX:** Design an intuitive user interface for interacting with the AI.
-7.  **Testing and Security:** Rigorously test the system for stability, performance, and security vulnerabilities.
+1.  **Implement Initial Networking Capabilities:** Give the AI the ability to connect to the internet to fetch information and communicate. This is the foundation for future skills.
+2.  **Advanced App Capabilities:** Expand the app generation engine to support more complex applications, such as:
+    *   WiFi-based text and voice calling apps.
+    *   More advanced browsers with tabs and history.
+    *   Simple games and productivity tools.
+3.  **True Self-Awareness:** Enhance the `SystemMonitor` to provide real-time data about the device's actual processes, memory, and network status.
+4.  **Security and Sandboxing:** Develop robust security protocols and a sandboxed environment for testing and running generated applications safely.
+5.  **Core AI Enhancement:** Replace the placeholder AI logic with a more advanced, possibly on-device, machine learning model for more natural language understanding and interaction.
 
-## 4. How It Works (Conceptual)
+## 5. How It Works (Conceptual)
 
 The user interacts with AiOS through a simple prompt-based interface (text or voice). For example, a user could say:
 
