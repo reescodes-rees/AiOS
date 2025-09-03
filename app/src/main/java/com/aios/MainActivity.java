@@ -18,6 +18,7 @@ public class MainActivity extends AppCompatActivity {
     private MessageAdapter messageAdapter;
     private List<Message> messageList;
     private AiService aiService;
+    private AiOSCore aiOSCore;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -28,9 +29,11 @@ public class MainActivity extends AppCompatActivity {
         editText = findViewById(R.id.editText);
         sendButton = findViewById(R.id.sendButton);
 
+        aiOSCore = new AiOSCore();
+        aiService = new AiService(aiOSCore);
         messageList = new ArrayList<>();
         messageAdapter = new MessageAdapter(messageList);
-        aiService = new AiService();
+
 
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
         recyclerView.setAdapter(messageAdapter);

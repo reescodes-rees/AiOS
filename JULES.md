@@ -15,7 +15,11 @@ This file is used by me, Jules, to track the development progress of the AiOS pr
   - [x] Create `Message.java` Model.
   - [x] Create Placeholder `AiService.java`.
   - [x] Integrate AI Service with MainActivity.
-  - [ ] Implement basic command parser.
+  - [x] Implement basic command parser.
+  - [ ] **Implement Core AI Memory and Modular Architecture**
+    - [ ] Create `AiOSCore.java` (AI Memory).
+    - [ ] Implement `Command` pattern (Interface, Registry, Command classes).
+    - [ ] Refactor `AiService` to use the Command Registry.
 
 ## Done
 
