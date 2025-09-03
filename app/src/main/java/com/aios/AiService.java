@@ -1,9 +1,11 @@
 package com.aios;
 
 import com.aios.commands.Command;
+import com.aios.commands.Command;
 import com.aios.commands.CommandRegistry;
 import com.aios.commands.CreateAppCommand;
 import com.aios.commands.HelpCommand;
+import com.aios.commands.ListAppsCommand;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -23,6 +25,7 @@ public class AiService {
     private void registerCommands() {
         registry.registerCommand(new HelpCommand());
         registry.registerCommand(new CreateAppCommand());
+        registry.registerCommand(new ListAppsCommand());
     }
 
     public Message getResponse(String userInput) {

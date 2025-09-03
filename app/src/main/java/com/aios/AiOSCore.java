@@ -1,5 +1,6 @@
 package com.aios;
 
+import com.aios.app_registry.AppRegistry;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -11,10 +12,15 @@ import java.util.List;
 public class AiOSCore {
 
     private final List<String> eventLog;
+    private final AppRegistry appRegistry;
 
     public AiOSCore() {
         this.eventLog = new ArrayList<>();
+        this.appRegistry = new AppRegistry();
         logEvent("AiOS Core Initialized.");
+        logEvent("Scanning for existing apps...");
+        this.appRegistry.scanForApps();
+        logEvent("App scan complete. Found " + this.appRegistry.getAppList().size() + " apps.");
     }
 
     /**
@@ -32,5 +38,13 @@ public class AiOSCore {
      */
     public List<String> getEventLog() {
         return Collections.unmodifiableList(eventLog);
+    }
+
+    /**
+     * Retrieves the app registry.
+     * @return The AppRegistry instance.
+     */
+    public AppRegistry getAppRegistry() {
+        return appRegistry;
     }
 }

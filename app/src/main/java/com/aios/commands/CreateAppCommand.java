@@ -109,6 +109,11 @@ public class CreateAppCommand implements Command {
             return "Error: Could not write MainActivity.java file.";
         }
 
+        // Refresh the app registry to include the new app
+        core.logEvent("Refreshing app registry...");
+        core.getAppRegistry().scanForApps();
+        core.logEvent("App registry refreshed.");
+
         return "Successfully created app '" + appName + "' in directory '" + baseDir + "'.";
     }
 }
