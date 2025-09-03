@@ -77,6 +77,11 @@ public class CreateAppCommand implements Command {
             return "Error: App generation failed. Could not write a template file. " + e.getMessage();
         }
 
+        // Refresh the app registry to include the new app
+        core.logEvent("Refreshing app registry...");
+        core.getAppRegistry().scanForApps();
+        core.logEvent("App registry refreshed.");
+
         return "Successfully created app '" + appName + "' from template '" + templateName + "'.";
     }
 }

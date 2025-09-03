@@ -4,6 +4,7 @@ import com.aios.commands.Command;
 import com.aios.commands.CommandRegistry;
 import com.aios.commands.CreateAppCommand;
 import com.aios.commands.HelpCommand;
+import com.aios.commands.ListAppsCommand;
 import com.aios.commands.ListTemplatesCommand;
 
 import java.util.ArrayList;
@@ -25,6 +26,7 @@ public class AiService {
         registry.registerCommand(new HelpCommand());
         registry.registerCommand(new CreateAppCommand());
         registry.registerCommand(new ListTemplatesCommand());
+        registry.registerCommand(new ListAppsCommand());
     }
 
     public Message getResponse(String userInput) {
