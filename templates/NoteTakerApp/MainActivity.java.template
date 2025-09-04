@@ -1,0 +1,88 @@
+package com.aios.generated.__PACKAGE_NAME__;
+
+import android.app.Activity;
+import android.os.Bundle;
+import android.os.Environment;
+import android.view.View;
+import android.widget.Button;
+import android.widget.EditText;
+import android.widget.Toast;
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
+
+public class MainActivity extends Activity {
+
+    private EditText noteEditText;
+    private Button saveButton;
+
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        // This layout is defined in the activity_main.xml.template, but since we can't have
+        // a res/layout directory in our generated app structure easily, we are creating it programmatically.
+        // This is a limitation we can improve later. For now, let's build the UI in code.
+
+        // Let's stick to the plan of having a layout file. The build system of the generated app would handle it.
+        // We need to add a res/layout folder to the generated app structure.
+        // The FileGenerator can do this.
+        // Let's assume the layout file is there. I need to update the createapp command later to create the res folder.
+
+        // Re-evaluating. The `createapp` command only creates a single Java file. It doesn't create a res directory.
+        // This is a flaw in my plan. I will correct this by creating the UI programmatically in this template,
+        // which avoids the need for a layout file. This is simpler and still demonstrates the concept.
+
+        // Final decision: I will create the UI programmatically.
+
+        LinearLayout layout = new LinearLayout(this);
+        layout.setOrientation(LinearLayout.VERTICAL);
+        layout.setPadding(16, 16, 16, 16);
+
+        noteEditText = new EditText(this);
+        noteEditText.setHint("Enter your note here...");
+        noteEditText.setGravity(Gravity.TOP);
+        LinearLayout.LayoutParams editTextParams = new LinearLayout.LayoutParams(
+                LinearLayout.LayoutParams.MATCH_PARENT, 0, 1.0f);
+        noteEditText.setLayoutParams(editTextParams);
+        layout.addView(noteEditText);
+
+        saveButton = new Button(this);
+        saveButton.setText("Save Note");
+        LinearLayout.LayoutParams buttonParams = new LinearLayout.LayoutParams(
+                LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT);
+        saveButton.setLayoutParams(buttonParams);
+        layout.addView(saveButton);
+
+        setContentView(layout);
+
+        saveButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                saveNote();
+            }
+        });
+    }
+
+    private void saveNote() {
+        String noteText = noteEditText.getText().toString();
+        if (noteText.isEmpty()) {
+            Toast.makeText(this, "Note is empty.", Toast.LENGTH_SHORT).show();
+            return;
+        }
+
+        try {
+            File notesDir = new File(getExternalFilesDir(null), "Notes");
+            if (!notesDir.exists()) {
+                notesDir.mkdirs();
+            }
+            File file = new File(notesDir, "note.txt");
+            FileOutputStream fos = new FileOutputStream(file);
+            fos.write(noteText.getBytes());
+            fos.close();
+            Toast.makeText(this, "Note saved to " + file.getAbsolutePath(), Toast.LENGTH_LONG).show();
+        } catch (IOException e) {
+            e.printStackTrace();
+            Toast.makeText(this, "Failed to save note.", Toast.LENGTH_SHORT).show();
+        }
+    }
+}

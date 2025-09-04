@@ -8,6 +8,7 @@ import com.aios.commands.DeleteAppCommand;
 import com.aios.commands.ListAppsCommand;
 import com.aios.commands.ListTemplatesCommand;
 import com.aios.commands.FetchCommand;
+import com.aios.commands.ReadFileCommand;
 
 
 import java.util.ArrayList;
@@ -32,6 +33,7 @@ public class AiService {
         registry.registerCommand(new ListTemplatesCommand());
         registry.registerCommand(new FetchCommand());
         registry.registerCommand(new DeleteAppCommand());
+        registry.registerCommand(new ReadFileCommand());
     }
 
     public Message getResponse(String userInput) {
