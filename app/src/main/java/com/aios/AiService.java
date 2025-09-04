@@ -6,6 +6,8 @@ import com.aios.commands.CreateAppCommand;
 import com.aios.commands.HelpCommand;
 import com.aios.commands.ListAppsCommand;
 import com.aios.commands.ListTemplatesCommand;
+import com.aios.commands.FetchCommand;
+
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -25,8 +27,9 @@ public class AiService {
     private void registerCommands() {
         registry.registerCommand(new HelpCommand());
         registry.registerCommand(new CreateAppCommand());
-        registry.registerCommand(new ListTemplatesCommand());
         registry.registerCommand(new ListAppsCommand());
+        registry.registerCommand(new ListTemplatesCommand());
+        registry.registerCommand(new FetchCommand());
     }
 
     public Message getResponse(String userInput) {
@@ -44,7 +47,7 @@ public class AiService {
         String responseText;
 
         if (command != null) {
-            responseText = command.execute(args, core);
+            responseText = command.execute(args, core, registry);
         } else {
             responseText = "Unknown command: '" + commandName + "'. Type 'help' for a list of commands.";
             core.logEvent("Unknown command received: " + commandName);

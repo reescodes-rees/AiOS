@@ -19,7 +19,7 @@ public class CreateAppCommand implements Command {
     }
 
     @Override
-    public String execute(List<String> args, AiOSCore core) {
+    public String execute(List<String> args, AiOSCore core, CommandRegistry registry) {
         core.logEvent("Executing 'createapp' command with args: " + args);
 
         if (args.size() < 2) {

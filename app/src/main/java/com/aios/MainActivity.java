@@ -1,9 +1,12 @@
 package com.aios;
 
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Looper;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -12,6 +15,9 @@ import java.util.List;
 
 public class MainActivity extends AppCompatActivity {
 
+    public static final int MESSAGE_ID_SYSTEM_MONITOR = 1;
+    private static final long SYSTEM_MONITOR_INTERVAL_MS = 20000; // 20 seconds
+
     private RecyclerView recyclerView;
     private EditText editText;
     private Button sendButton;
@@ -19,6 +25,8 @@ public class MainActivity extends AppCompatActivity {
     private List<Message> messageList;
     private AiService aiService;
     private AiOSCore aiOSCore;
+    private SystemMonitor systemMonitor;
+    private Handler uiHandler;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -31,14 +39,32 @@ public class MainActivity extends AppCompatActivity {
         sendButton = findViewById(R.id.sendButton);
 
         // Core AI and Service initialization
-        aiOSCore = new AiOSCore();
-        aiService = new AiService(aiOSCore);
         messageList = new ArrayList<>();
         messageAdapter = new MessageAdapter(messageList);
+
+        // Setup Handler to receive messages from background services
+        // This must be initialized before AiOSCore, which needs it.
+        uiHandler = new Handler(Looper.getMainLooper()) {
+            @Override
+            public void handleMessage(@NonNull android.os.Message msg) {
+                if (msg.what == MESSAGE_ID_SYSTEM_MONITOR) {
+                    Message systemMessage = (Message) msg.obj;
+                    messageList.add(systemMessage);
+                    messageAdapter.notifyItemInserted(messageList.size() - 1);
+                    recyclerView.scrollToPosition(messageList.size() - 1);
+                }
+            }
+        };
+
+        aiOSCore = new AiOSCore(uiHandler);
+        aiService = new AiService(aiOSCore);
 
         // Setup RecyclerView
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
         recyclerView.setAdapter(messageAdapter);
+
+        // Setup and start the System Monitor
+        systemMonitor = new SystemMonitor(aiOSCore, SYSTEM_MONITOR_INTERVAL_MS);
 
         // Setup user input handling
         sendButton.setOnClickListener(new View.OnClickListener() {
@@ -53,8 +79,11 @@ public class MainActivity extends AppCompatActivity {
 
                     // Get AI response
                     Message aiMessage = aiService.getResponse(userInput);
-                    messageList.add(aiMessage);
-                    messageAdapter.notifyItemInserted(messageList.size() - 1);
+                    // Don't add the immediate response here for async commands like fetch
+                    if (aiMessage != null) {
+                        messageList.add(aiMessage);
+                        messageAdapter.notifyItemInserted(messageList.size() - 1);
+                    }
 
                     // Scroll to the bottom
                     recyclerView.scrollToPosition(messageList.size() - 1);
@@ -62,5 +91,17 @@ public class MainActivity extends AppCompatActivity {
                 }
             }
         });
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        systemMonitor.start();
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        systemMonitor.stop();
     }
 }

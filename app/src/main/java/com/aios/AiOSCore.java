@@ -1,5 +1,6 @@
 package com.aios;
 
+import android.os.Handler;
 import com.aios.app_registry.AppRegistry;
 import com.aios.templates.TemplateManager;
 import java.util.ArrayList;
@@ -12,19 +13,21 @@ import java.util.List;
  */
 public class AiOSCore {
 
+    private final Handler uiHandler;
     private final List<String> eventLog;
-    private final TemplateManager templateManager;
     private final AppRegistry appRegistry;
+    private final TemplateManager templateManager;
 
-    public AiOSCore() {
+    public AiOSCore(Handler uiHandler) {
+        this.uiHandler = uiHandler;
         this.eventLog = new ArrayList<>();
-        this.templateManager = new TemplateManager();
         this.appRegistry = new AppRegistry();
+        this.templateManager = new TemplateManager();
         logEvent("AiOS Core Initialized.");
-        logEvent("Template scan complete. Found " + this.templateManager.getAvailableTemplates().size() + " templates.");
         logEvent("Scanning for existing apps...");
         this.appRegistry.scanForApps();
         logEvent("App scan complete. Found " + this.appRegistry.getAppList().size() + " apps.");
+        logEvent("Template scan complete. Found " + this.templateManager.getAvailableTemplates().size() + " templates.");
     }
 
     /**
@@ -45,6 +48,14 @@ public class AiOSCore {
     }
 
     /**
+     * Retrieves the app registry.
+     * @return The AppRegistry instance.
+     */
+    public AppRegistry getAppRegistry() {
+        return appRegistry;
+    }
+
+    /**
      * Retrieves the template manager.
      * @return The TemplateManager instance.
      */
@@ -53,10 +64,13 @@ public class AiOSCore {
     }
 
     /**
-     * Retrieves the app registry.
-     * @return The AppRegistry instance.
+     * Sends a message to the UI thread to be displayed in the chat.
+     * This is the safe way for background tasks or commands to update the UI.
+     * @param message The message to send to the UI.
      */
-    public AppRegistry getAppRegistry() {
-        return appRegistry;
+    public void sendUIMessage(Message message) {
+        // In a more complex app, we might use different message IDs for different purposes.
+        android.os.Message handlerMessage = uiHandler.obtainMessage(MainActivity.MESSAGE_ID_SYSTEM_MONITOR, message);
+        uiHandler.sendMessage(handlerMessage);
     }
 }

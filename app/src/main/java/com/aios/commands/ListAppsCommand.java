@@ -18,7 +18,7 @@ public class ListAppsCommand implements Command {
     }
 
     @Override
-    public String execute(List<String> args, AiOSCore core) {
+    public String execute(List<String> args, AiOSCore core, CommandRegistry registry) {
         core.logEvent("Executing 'listapps' command.");
         AppRegistry appRegistry = core.getAppRegistry();
         List<AppInfo> apps = appRegistry.getAppList();

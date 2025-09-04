@@ -16,9 +16,16 @@ public class HelpCommand implements Command {
     }
 
     @Override
-    public String execute(List<String> args, AiOSCore core) {
+    public String execute(List<String> args, AiOSCore core, CommandRegistry registry) {
         core.logEvent("Executing 'help' command.");
-        // This is a placeholder. The real implementation will be in a future commit.
-        return "Available commands:\n- help\n- createapp";
+        StringBuilder helpText = new StringBuilder("Available commands:\n");
+        for (Command cmd : registry.getAllCommands()) {
+            helpText.append("- ")
+                    .append(cmd.getName())
+                    .append(": ")
+                    .append(cmd.getDescription())
+                    .append("\n");
+        }
+        return helpText.toString();
     }
 }
